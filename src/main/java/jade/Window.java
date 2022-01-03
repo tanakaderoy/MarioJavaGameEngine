@@ -4,7 +4,6 @@ import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import util.Color;
-import util.Time;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -80,10 +79,7 @@ public class Window {
         //Make the window visible
         glfwShowWindow(glfwWindow);
 
-
-    }
-
-    public void loop() {
+        Window.changeScene(SceneType.LEVELEDITORSCENE);
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
         // LWJGL detects the context that is current in the current thread,
@@ -92,19 +88,25 @@ public class Window {
         GL.createCapabilities();
 
 
-        float beginTime = Time.getTime();
-        float endTime = Time.getTime();
+    }
+
+    public void loop() {
+
+
+        float beginTime = (float)glfwGetTime();
+        float endTime;
+        float dt = -1.0f;
 
         while (!glfwWindowShouldClose(glfwWindow)) {
             //Poll events
             glfwPollEvents();
             glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
             glClear(GL_COLOR_BUFFER_BIT);
-
-
+            if (dt >= 0)
+                currentScene.update(dt);
             glfwSwapBuffers(glfwWindow);
-            endTime = Time.getTime();
-            float dt = endTime - beginTime;
+            endTime = (float)glfwGetTime();
+            dt = endTime - beginTime;
             beginTime = endTime;
 
         }
@@ -124,9 +126,6 @@ public class Window {
 
         }
     }
-
-
-
 
 
 }

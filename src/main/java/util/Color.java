@@ -11,4 +11,14 @@ public class Color {
         this.b = b;
         this.a = a;
     }
+
+    @Override
+    public String toString() {
+        return "Color{" +
+                "r=" + r +
+                ", g=" + g +
+                ", b=" + b +
+                ", a=" + a +
+                '}';
+    }
 }

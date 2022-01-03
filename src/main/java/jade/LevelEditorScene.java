@@ -1,5 +1,7 @@
 package jade;
 
+import util.Color;
+
 import java.awt.event.KeyEvent;
 
 public class LevelEditorScene extends Scene {
@@ -7,11 +9,12 @@ public class LevelEditorScene extends Scene {
     private float timeToChangeScene = 2f;
 
     public LevelEditorScene() {
+        System.out.println("Level Editor Scene");
     }
 
     @Override
     public void update(float dt) {
-
+//        System.out.println((1.0f/dt)+" fps");
         if (!changingScene && KeyListener.isKeyPressed(KeyEvent.VK_SPACE)) {
             changingScene = true;
         }
