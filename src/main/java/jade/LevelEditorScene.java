@@ -3,10 +3,12 @@ package jade;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import renderer.Shader;
+import util.Time;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -88,12 +90,21 @@ public class LevelEditorScene extends Scene {
 
     @Override
     public void update(float dt) {
-        camera.position.x -= dt * 50;
+        if (camera.position.x <= -698) {
+            camera.position.x = 50f;
+            camera.position.y =50f;
+
+        }
+        camera.position.x -= dt * 100;
+        camera.position.y -= dt * 100;
+        System.out.printf("Camera X: %f \n", camera.position.x);
+        System.out.printf("Camera Y: %f \n", camera.position.y);
         // Bind the VAO we're using
         glBindVertexArray(vaoID);
         defaultShader.use();
         defaultShader.uploadMat4f("uProjection", camera.getProjectionMatrix());
         defaultShader.uploadMat4f("uView", camera.getViewMatrix());
+        defaultShader.uploadFloat("uTime", Time.getTime());
         // Enable Vertex Attrib pointers
         glEnableVertexAttribArray(0);
         glEnableVertexAttribArray(1);

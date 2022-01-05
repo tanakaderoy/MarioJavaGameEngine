@@ -1,6 +1,6 @@
 package renderer;
 
-import org.joml.Matrix4f;
+import org.joml.*;
 import org.lwjgl.BufferUtils;
 
 import javax.imageio.IIOException;
@@ -17,6 +17,7 @@ public class Shader {
 
     private int shaderProgramID;
     private String vertexSource, fragmentSource, filePath;
+    private boolean beingUsed = false;
 
     public Shader(String filepath) {
         this.filePath = filepath;
@@ -25,25 +26,25 @@ public class Shader {
             String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
             // Find the first pattern after #type 'pattern'
             int index = source.indexOf("#type") + 6;
-            int eol = source.indexOf("\r\n",index);
+            int eol = source.indexOf("\r\n", index);
             String firstPattern = source.substring(index, eol).trim();
 
             index = source.indexOf("#type", eol) + 6;
-            eol = source.indexOf("\r\n",index);
+            eol = source.indexOf("\r\n", index);
             String secondPattern = source.substring(index, eol).trim();
 
-            if (firstPattern.equals("vertex")){
+            if (firstPattern.equals("vertex")) {
                 vertexSource = splitString[1];
-            }else if (firstPattern.equals("fragment")){
+            } else if (firstPattern.equals("fragment")) {
                 fragmentSource = splitString[1];
-            }else {
+            } else {
                 throw new IOException("Unexexpected token: '%s'".formatted(firstPattern));
             }
-            if (secondPattern.equals("vertex")){
+            if (secondPattern.equals("vertex")) {
                 vertexSource = splitString[2];
-            }else if (secondPattern.equals("fragment")){
+            } else if (secondPattern.equals("fragment")) {
                 fragmentSource = splitString[2];
-            }else {
+            } else {
                 throw new IOException("Unexexpected token: '%s'".formatted(secondPattern));
             }
         } catch (IOException e) {
@@ -69,7 +70,7 @@ public class Shader {
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.out.printf("ERROR: '%s'\n\tVertex shader compilation failed",filePath);
+            System.out.printf("ERROR: '%s'\n\tVertex shader compilation failed", filePath);
             System.out.println(glGetShaderInfoLog(vertexID, len));
             assert false : "";
         }
@@ -85,7 +86,7 @@ public class Shader {
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int len = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.printf("ERROR: '%s'\n\tFragment shader compilation failed",filePath);
+            System.out.printf("ERROR: '%s'\n\tFragment shader compilation failed", filePath);
             System.out.println(glGetShaderInfoLog(fragmentID, len));
             assert false : "";
         }
@@ -107,18 +108,63 @@ public class Shader {
     }
 
     public void use() {
-        // Bind the Shader Program
-        glUseProgram(shaderProgramID);
+        if (!beingUsed) {
+            // Bind the Shader Program
+            glUseProgram(shaderProgramID);
+            beingUsed = true;
+        }
     }
 
     public void detatch() {
         glUseProgram(0);
+        beingUsed = false;
     }
 
     public void uploadMat4f(String varName, Matrix4f mat4) {
-        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+        int varLocation = getLocation(varName);
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
         mat4.get(matBuffer);
         glUniformMatrix4fv(varLocation, false, matBuffer);
+    }
+    public void uploadMat3f(String varName, Matrix3f mat3) {
+        int varLocation = getLocation(varName);
+        FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);
+        mat3.get(matBuffer);
+        glUniformMatrix3fv(varLocation, false, matBuffer);
+    }
+
+    public void uploadVec4f(String varName, Vector4f vec) {
+        int varLocation = getLocation(varName);
+        use();
+        glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w);
+    }
+
+    public void uploadVec3f(String varName, Vector3f vec) {
+        int varLocation = getLocation(varName);
+        use();
+        glUniform3f(varLocation, vec.x, vec.y, vec.z);
+    }
+
+    public void uploadVec2f(String varName, Vector2f vec) {
+        int varLocation = getLocation(varName);
+        use();
+        glUniform2f(varLocation, vec.x, vec.y);
+    }
+
+
+    public void uploadFloat(String varName, float val) {
+        int varLocation = getLocation(varName);
+        use();
+        glUniform1f(varLocation, val);
+    }
+
+    public void uploadInt(String varName, int val) {
+        int varLocation = getLocation(varName);
+        use();
+        glUniform1i(varLocation, val);
+    }
+
+    private int getLocation(String varName) {
+        return glGetUniformLocation(shaderProgramID, varName);
     }
 }
