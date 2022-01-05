@@ -3,7 +3,6 @@ package renderer;
 import org.joml.*;
 import org.lwjgl.BufferUtils;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.file.Files;
@@ -162,6 +161,12 @@ public class Shader {
         int varLocation = getLocation(varName);
         use();
         glUniform1i(varLocation, val);
+    }
+
+    public void uploadTexture(String varName, int slot){
+        int varLocation = getLocation(varName);
+        use();
+        glUniform1i(varLocation, slot);
     }
 
     private int getLocation(String varName) {
