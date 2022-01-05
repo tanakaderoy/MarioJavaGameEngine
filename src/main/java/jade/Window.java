@@ -1,14 +1,14 @@
 package jade;
 
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
+import org.lwjgl.Version;
+import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.opengl.GL;
 import util.Color;
 
-import static org.lwjgl.glfw.Callbacks.*;
+import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Window {
     private final String title;
@@ -93,7 +93,7 @@ public class Window {
     public void loop() {
 
 
-        float beginTime = (float)glfwGetTime();
+        float beginTime = (float) glfwGetTime();
         float endTime;
         float dt = -1.0f;
 
@@ -105,7 +105,7 @@ public class Window {
             if (dt >= 0)
                 currentScene.update(dt);
             glfwSwapBuffers(glfwWindow);
-            endTime = (float)glfwGetTime();
+            endTime = (float) glfwGetTime();
             dt = endTime - beginTime;
             beginTime = endTime;
 
@@ -117,10 +117,12 @@ public class Window {
             case LEVELSCENE -> {
                 currentScene = new LevelScene();
                 currentScene.init();
+                currentScene.start();
             }
             case LEVELEDITORSCENE -> {
                 currentScene = new LevelEditorScene();
                 currentScene.init();
+                currentScene.start();
             }
             default -> {
                 assert false : "Unkown Scene '" + newScene + "'";

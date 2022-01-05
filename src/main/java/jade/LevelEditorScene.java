@@ -1,5 +1,7 @@
 package jade;
 
+import components.FontRender;
+import components.SpriteRenderer;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import renderer.Shader;
@@ -9,7 +11,6 @@ import util.Time;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import static org.lwjgl.glfw.GLFW.glfwGetTime;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
@@ -20,13 +21,14 @@ public class LevelEditorScene extends Scene {
     private int vaoID, vboID, eboID;
     private Shader defaultShader;
     private Texture testTexture;
+    GameObject testObj;
 
     private float[] vertexArray = {
             // position               // color                  // UV Coordinates
-            100f,   0f, 0.0f,       1.0f, 0.0f, 0.0f, 1.0f,     1, 1, // Bottom right 0
-            0f, 100f, 0.0f,       0.0f, 1.0f, 0.0f, 1.0f,     0, 0, // Top left     1
-            100f, 100f, 0.0f ,      1.0f, 0.0f, 1.0f, 1.0f,     1, 0, // Top right    2
-            0f,   0f, 0.0f,       1.0f, 1.0f, 0.0f, 1.0f,     0, 1  // Bottom left  3
+            100f, 0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1, 1, // Bottom right 0
+            0f, 100f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0, 0, // Top left     1
+            100f, 100f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1, 0, // Top right    2
+            0f, 0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0, 1  // Bottom left  3
     };
 
     // IMPORTANT: Must be in counter-clockwise order
@@ -38,6 +40,7 @@ public class LevelEditorScene extends Scene {
             2, 1, 0, // Top right triangle
             0, 1, 3 // bottom left triangle
     };
+    private boolean ft = false;
 
     public LevelEditorScene() {
     }
@@ -46,7 +49,14 @@ public class LevelEditorScene extends Scene {
     @Override
     public void init() {
         super.init();
-        this.camera = new Camera(new Vector2f(-200,-300));
+        System.out.println("Creating test object");
+        this.testObj = new GameObject("test obj");
+        testObj.addComponent(new SpriteRenderer());
+        testObj.addComponent(new FontRender());
+        addGameObjectToScene(testObj);
+
+
+        this.camera = new Camera(new Vector2f(-200, -300));
         this.testTexture = new Texture("assets/images/testImage.JPG");
         defaultShader = new Shader("assets/shaders/default.glsl");
         defaultShader.compile();
@@ -86,7 +96,7 @@ public class LevelEditorScene extends Scene {
         glVertexAttribPointer(1, colorSize, GL_FLOAT, false, vertexSizeBytes, positionsSize * floatByteSize);
         glEnableVertexAttribArray(1);
 
-        glVertexAttribPointer(2,uvSize,GL_FLOAT,false,vertexSizeBytes,(positionsSize + colorSize)* floatByteSize);
+        glVertexAttribPointer(2, uvSize, GL_FLOAT, false, vertexSizeBytes, (positionsSize + colorSize) * floatByteSize);
         glEnableVertexAttribArray(2);
 
     }
@@ -128,6 +138,15 @@ public class LevelEditorScene extends Scene {
         glBindVertexArray(0);
         defaultShader.detatch();
 
+        if (!ft) {
+            System.out.println("Createing gameObject");
+            GameObject go = new GameObject("Game test 2");
+            go.addComponent(new SpriteRenderer());
+            addGameObjectToScene(go);
+            ft = true;
+        }
+
+        gameObjects.forEach(gameObject -> gameObject.update(dt));
     }
 
 
