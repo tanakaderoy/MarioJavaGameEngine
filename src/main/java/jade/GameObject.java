@@ -7,10 +7,25 @@ import java.util.function.Consumer;
 public class GameObject {
     private String name;
     private List<Component> components;
+    public Transform transform;
 
     public GameObject(String name) {
+        init(name);
+    }
+
+    public void init(String name) {
         this.name = name;
         this.components = new ArrayList<>();
+        this.transform = new Transform();
+    }
+
+    public void init(String name, Transform transform) {
+        this.init(name);
+        this.transform = transform;
+    }
+
+    public GameObject(String name, Transform transform) {
+        init(name, transform);
     }
 
     public <T extends Component> T getComponent(Class<T> componentClass) {
@@ -61,4 +76,7 @@ public class GameObject {
         }
     }
 
+    public String getName() {
+        return name;
+    }
 }

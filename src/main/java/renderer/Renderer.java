@@ -1,0 +1,49 @@
+package renderer;
+
+import components.SpriteRenderer;
+import jade.GameObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Renderer implements RendererI {
+    private final int MAX_BATCH_SIZE = 1000;
+    private List<RenderBatch> batches;
+
+    public Renderer() {
+        batches = new ArrayList<>();
+    }
+
+    @Override
+    public void add(GameObject obj) {
+        SpriteRenderer spr = obj.getComponent(SpriteRenderer.class);
+        if (spr != null) {
+            add(spr);
+        }
+    }
+
+    @Override
+    public void add(SpriteRenderer sprite) {
+        boolean added = false;
+
+        for (RenderBatch batch : batches) {
+            if (batch.hasRoom()) {
+                batch.addSprite(sprite);
+                added = true;
+                break;
+            }
+        }
+
+        if (!added) {
+            RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE);
+            newBatch.start();
+            batches.add(newBatch);
+            newBatch.addSprite(sprite);
+        }
+    }
+
+    @Override
+    public void render() {
+        batches.forEach(RenderBatch::render);
+    }
+}

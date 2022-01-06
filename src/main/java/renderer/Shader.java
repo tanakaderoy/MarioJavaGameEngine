@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
 
 public class Shader {
 
@@ -114,7 +113,7 @@ public class Shader {
         }
     }
 
-    public void detatch() {
+    public void detach() {
         glUseProgram(0);
         beingUsed = false;
     }
@@ -125,6 +124,7 @@ public class Shader {
         mat4.get(matBuffer);
         glUniformMatrix4fv(varLocation, false, matBuffer);
     }
+
     public void uploadMat3f(String varName, Matrix3f mat3) {
         int varLocation = getLocation(varName);
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);
@@ -163,7 +163,7 @@ public class Shader {
         glUniform1i(varLocation, val);
     }
 
-    public void uploadTexture(String varName, int slot){
+    public void uploadTexture(String varName, int slot) {
         int varLocation = getLocation(varName);
         use();
         glUniform1i(varLocation, slot);
