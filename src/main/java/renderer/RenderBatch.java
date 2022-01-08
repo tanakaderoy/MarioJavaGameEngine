@@ -237,4 +237,12 @@ public class RenderBatch implements RenderBatchI {
     public boolean hasRoom() {
         return hasRoom;
     }
+
+    public boolean hasTextureRoom() {
+        return textures.size() < 8;
+    }
+
+    public boolean hasTexture(Texture tex) {
+        return textures.contains(tex);
+    }
 }

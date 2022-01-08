@@ -16,7 +16,7 @@ public class Window {
     private static Window instance;
     private long glfwWindow;
     private static Scene currentScene = null;
-    Color backgroundColor = Color.white;
+    Color backgroundColor = Color.black;
 
 
     private Window() {
