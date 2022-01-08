@@ -3,6 +3,9 @@ package jade;
 import components.SpriteRenderer;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import util.AssetPool;
+
+import static util.Constants.SHADERS_DEFAULT_GLSL;
 
 public class LevelEditorScene extends Scene {
 
@@ -33,11 +36,17 @@ public class LevelEditorScene extends Scene {
             }
         }
 
+        loadResources();
+
+    }
+
+    private void loadResources() {
+        AssetPool.getShader(SHADERS_DEFAULT_GLSL);
     }
 
     @Override
     public void update(float dt) {
-        System.out.printf("FPS: %f \n", 1f / dt);
+//        System.out.printf("FPS: %f \n", 1f / dt);
         gameObjects.forEach(gameObject -> gameObject.update(dt));
         renderer.render();
     }
