@@ -1,5 +1,6 @@
 package jade
 
+import components.RigidBody
 import components.Sprite
 import components.SpriteRenderer
 import components.SpriteSheet
@@ -19,13 +20,14 @@ class LevelEditorScene : Scene() {
         super.init()
         camera = Camera(Vector2f(0f, 0f))
         if (levelLoaded) {
+            this.activeGameObject = gameObjects[0]
             return
         }
         sprites = AssetPool.getSpriteSheet(Constants.SPRITE_SHEET)
         //        obj1 = new GameObject("Obj 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
         obj1 = GameObject(
             "Obj 1", Transform(
-                Vector2f(100f, 100f),
+                Vector2f(200f, 100f),
                 Vector2f(256f, 256f)
             ),
             2
@@ -33,6 +35,7 @@ class LevelEditorScene : Scene() {
         val obj1Sprite = SpriteRenderer()
         obj1Sprite.color = Vector4f(0f, 1f, 0f, 1f)
         obj1!!.addComponent(obj1Sprite)
+        obj1!!.addComponent(RigidBody())
 //        obj1!!.addComponent(SpriteRenderer(Sprite("assets/images/blendImage1.png")))
         addGameObjectToScene(obj1!!)
         obj2 = GameObject(
@@ -40,7 +43,7 @@ class LevelEditorScene : Scene() {
                 Vector2f(400f, 100f),
                 Vector2f(256f, 256f)
             ),
-            2
+            3
         )
         val obj2SpriteRenderer = SpriteRenderer()
         val obj2Sprite = Sprite()
@@ -69,6 +72,7 @@ class LevelEditorScene : Scene() {
                 0
             )
         )
+        AssetPool.getTexture("assets/images/blendImage2.png")
     }
 
     override fun imgui() {

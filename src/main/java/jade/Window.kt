@@ -103,7 +103,6 @@ class Window private constructor() {
         var beginTime = GLFW.glfwGetTime().toFloat()
         var endTime: Float
         var dt = -1.0f
-        scene.load()
         while (!GLFW.glfwWindowShouldClose(glfwWindow)) {
             //Poll events
             GLFW.glfwPollEvents()
@@ -145,18 +144,18 @@ class Window private constructor() {
             when (newScene) {
                 SceneType.LEVELSCENE -> {
                     scene = LevelScene()
-                    (scene as LevelScene).init()
-                    (scene as LevelScene).start()
                 }
                 SceneType.LEVELEDITORSCENE -> {
                     scene = LevelEditorScene()
-                    (scene as LevelEditorScene).init()
-                    (scene as LevelEditorScene).start()
                 }
                 else -> {
-                    assert(false) { "Unkown Scene '$newScene'" }
+                    assert(false) { "Unknown Scene '$newScene'" }
                 }
             }
+
+            scene.load()
+            scene.init()
+            scene.start()
         }
 
         @JvmStatic

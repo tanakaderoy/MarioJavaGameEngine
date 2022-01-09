@@ -3,6 +3,7 @@ package jade
 import com.google.gson.GsonBuilder
 import imgui.ImGui
 import renderer.Renderer
+import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.nio.file.Files
@@ -73,7 +74,11 @@ abstract class Scene {
 
         var inFile = ""
         try {
-            inFile = String(Files.readAllBytes(Paths.get("level.json")))
+            val file = File(Paths.get("level.json").toUri())
+            if (!file.exists()) {
+                file.createNewFile()
+            }
+            inFile = String(Files.readAllBytes(file.toPath()))
         } catch (e: IOException) {
             e.printStackTrace()
         }

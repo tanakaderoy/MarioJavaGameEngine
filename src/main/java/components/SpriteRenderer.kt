@@ -23,7 +23,7 @@ class SpriteRenderer : Component() {
     private lateinit var lastTransform: Transform
 
     @Transient
-    var isDirty = false
+    var isDirty = true
 
 //    constructor(color: Vector4f) {
 //        this.color = color
