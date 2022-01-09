@@ -4,14 +4,15 @@ import org.lwjgl.BufferUtils
 import org.lwjgl.opengl.GL11
 import org.lwjgl.stb.STBImage
 
-class Texture(private val filepath: String) {
-    private val texID: Int
+class Texture {
+    private var texID: Int = 0;
+    private lateinit var filepath: String
     var width: Int = 0
     var height: Int = 0
 
 
-    init {
-
+    fun initialize(filePath: String) {
+        this.filepath = filePath
         // Generate texture on GPU
         texID = GL11.glGenTextures()
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, texID)

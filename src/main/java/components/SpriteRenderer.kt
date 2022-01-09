@@ -8,8 +8,8 @@ import org.joml.Vector2f
 import org.joml.Vector4f
 import renderer.Texture
 
-class SpriteRenderer : Component {
-    var color: Vector4f
+class SpriteRenderer : Component() {
+    var color: Vector4f = Vector4f(1.0f, 1.0f, 1.0f, 1.0F)
         set(color) {
             if (this.color != color) {
                 field = color
@@ -17,25 +17,29 @@ class SpriteRenderer : Component {
             }
 
         }
-    private var sprite: Sprite? = null
+    private var sprite: Sprite = Sprite()
+
+    @Transient
     private lateinit var lastTransform: Transform
+
+    @Transient
     var isDirty = false
 
-    constructor(color: Vector4f) {
-        this.color = color
-//        sprite = Sprite((null as Texture?)!!)
-        isDirty = true
-    }
+//    constructor(color: Vector4f) {
+//        this.color = color
+////        sprite = Sprite((null as Texture?)!!)
+//        isDirty = true
+//    }
+//    constructor(sprite: Sprite) {
+//        this.sprite = sprite
+//        color = Vector4f(1F, 1F, 1F, 1F)
+//        isDirty = true
+//    }
 
     fun setClean() {
         isDirty = false
     }
 
-    constructor(sprite: Sprite) {
-        this.sprite = sprite
-        color = Vector4f(1F, 1F, 1F, 1F)
-        isDirty = true
-    }
 
     override fun start() {
         super.start()
@@ -69,4 +73,5 @@ class SpriteRenderer : Component {
         this.sprite = sprite
         isDirty = true
     }
+
 }

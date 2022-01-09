@@ -1,5 +1,6 @@
 package jade
 
+import com.google.gson.GsonBuilder
 import components.Sprite
 import components.SpriteRenderer
 import components.SpriteSheet
@@ -27,7 +28,9 @@ class LevelEditorScene : Scene() {
             ),
             2
         )
-        obj1!!.addComponent(SpriteRenderer(Vector4f(1f, 0f, 0f, 1f)))
+        val obj1Sprite = SpriteRenderer()
+        obj1Sprite.color = Vector4f(1f, 0f, 0f, 1f)
+        obj1!!.addComponent(obj1Sprite)
 //        obj1!!.addComponent(SpriteRenderer(Sprite("assets/images/blendImage1.png")))
         addGameObjectToScene(obj1!!)
         obj2 = GameObject(
@@ -37,10 +40,21 @@ class LevelEditorScene : Scene() {
             ),
             2
         )
-        obj2!!.addComponent(SpriteRenderer(Sprite("assets/images/blendImage2.png")))
+        val obj2SpriteRenderer = SpriteRenderer()
+        val obj2Sprite = Sprite()
+        obj2Sprite.setTexture(AssetPool.getTexture("assets/images/blendImage2.png"))
+        obj2SpriteRenderer.setSprite(obj2Sprite)
+        obj2!!.addComponent(obj2SpriteRenderer)
         //        obj2.addComponent(new SpriteRenderer(sprites.getSprite(10)));
         addGameObjectToScene(obj2!!)
         this.activeGameObject = obj1
+
+        val gson = GsonBuilder()
+            .setPrettyPrinting()
+            .create()
+
+        print(gson.toJson(obj1))
+
 
     }
 

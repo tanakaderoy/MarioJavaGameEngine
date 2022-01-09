@@ -51,7 +51,8 @@ object AssetPool {
 //            return texture;
 //        }
         return getObjectFromMap(textures, resourceName, Supplier {
-            val texture = Texture(resourceName)
+            val texture = Texture()
+            texture.initialize(resourceName)
             textures[file.absolutePath] = texture
             texture
         })!!

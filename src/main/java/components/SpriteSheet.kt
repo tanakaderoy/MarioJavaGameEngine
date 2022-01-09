@@ -21,7 +21,9 @@ class SpriteSheet(private val texture: Texture, spriteWidth: Int, spriteHeight: 
                 Vector2f(leftX, bottomY),
                 Vector2f(leftX, topY)
             )
-            val sprite = Sprite(texture, texCoords)
+            val sprite = Sprite()
+            sprite.setTexture(texture)
+            sprite.setTexCoords(texCoords)
             sprites.add(sprite)
             currentX += spriteWidth + spacing
             if (currentX >= texture.width) {

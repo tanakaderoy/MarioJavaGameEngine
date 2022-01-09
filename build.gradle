@@ -15,10 +15,14 @@ ext {
     lwjglVersion = "3.2.3"
     jomlVersion = "1.9.23"
     lwjglNatives = "natives-windows"
+    gsonVersion = '2.8.9'
 }
 
 
 dependencies {
+    // Gson
+    implementation "com.google.code.gson:gson:$gsonVersion"
+
     //im Gui Stuff
     implementation "io.imgui.java:binding:$imguiVersion"
     implementation "io.imgui.java:lwjgl3:$imguiVersion"
