@@ -2,7 +2,7 @@ package renderer;
 
 import components.SpriteRenderer;
 
-public interface RenderBatchI {
+public interface IRenderBatch {
     void start();
 
     void addSprite(SpriteRenderer spr);

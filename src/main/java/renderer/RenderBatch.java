@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 import static util.Constants.SHADERS_DEFAULT_GLSL;
 
-public class RenderBatch implements RenderBatchI {
+public class RenderBatch implements IRenderBatch, Comparable<RenderBatch> {
     /*
      Vertex
      =======
@@ -46,8 +46,10 @@ public class RenderBatch implements RenderBatchI {
     private int vaoID, vboID;
     private int maxBatchSize;
     private Shader shader;
+    private int zIndex;
 
-    public RenderBatch(int maxBatchSize) {
+    public RenderBatch(int maxBatchSize, int zIndex) {
+        this.zIndex = zIndex;
         shader = AssetPool.getShader(SHADERS_DEFAULT_GLSL);
 
         sprites = new SpriteRenderer[maxBatchSize];
@@ -137,7 +139,7 @@ public class RenderBatch implements RenderBatchI {
         int offset = 4 * index;
         // 3,2,0,0,2,1,               7,6,4,4,6,5
         // Triangle 1
-        elements[offsetArrayIndex] = offset + 3;
+        elements[offsetArrayIndex + 0] = offset + 3;
         elements[offsetArrayIndex + 1] = offset + 2;
         elements[offsetArrayIndex + 2] = offset + 0;
 
@@ -254,5 +256,14 @@ public class RenderBatch implements RenderBatchI {
 
     public boolean hasTexture(Texture tex) {
         return textures.contains(tex);
+    }
+
+    public int getzIndex() {
+        return zIndex;
+    }
+
+    @Override
+    public int compareTo(RenderBatch o) {
+        return Integer.compare(this.zIndex, o.zIndex);
     }
 }

@@ -16,13 +16,13 @@ public class Window {
     private static Window instance;
     private long glfwWindow;
     private static Scene currentScene = null;
-    Color backgroundColor = Color.black;
+    Color backgroundColor = Color.white;
 
 
     private Window() {
         this.title = "Mario";
-        this.width = 1920;
-        this.height = 1080;
+        this.width = 1080;
+        this.height = 720;
     }
 
     public static Window get() {
@@ -62,6 +62,25 @@ public class Window {
         //Create the window
         glfwWindow = glfwCreateWindow(this.width, this.height, this.title, NULL, NULL);
 
+//        // Get the thread stack and push a new frame
+//        try (MemoryStack stack = stackPush()) {
+//            IntBuffer pWidth = stack.mallocInt(1); // int*
+//            IntBuffer pHeight = stack.mallocInt(1); // int*
+//
+//            // Get the window size passed to glfwCreateWindow
+//            glfwGetWindowSize(glfwWindow, pWidth, pHeight);
+//
+//            // Get the resolution of the primary monitor
+//            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+//
+//            // Center the window
+//            glfwSetWindowPos(
+//                    glfwWindow,
+//                    (vidmode.width() - pWidth.get(0)) / 2,
+//                    (vidmode.height() - pHeight.get(0)) / 2
+//            );
+//        } // the stack frame is popped automatically
+
         //Set events callbacks
         glfwSetCursorPosCallback(glfwWindow, MouseListener::mousePosCallback);
         glfwSetMouseButtonCallback(glfwWindow, MouseListener::mouseButtonCallback);
@@ -85,6 +104,9 @@ public class Window {
         // creates the GLCapabilities instance and makes the OpenGL
         // bindings available for use.
         GL.createCapabilities();
+        
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         Window.changeScene(SceneType.LEVELEDITORSCENE);
 
 
