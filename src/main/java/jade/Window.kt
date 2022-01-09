@@ -4,6 +4,7 @@ import org.lwjgl.Version
 import org.lwjgl.glfw.Callbacks
 import org.lwjgl.glfw.GLFW
 import org.lwjgl.glfw.GLFWErrorCallback
+import org.lwjgl.glfw.GLFWWindowSizeCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryUtil
@@ -11,10 +12,11 @@ import util.Color
 
 class Window private constructor() {
     private val title = "Mario"
-    private val width = 1080
-    private val height = 720
+    private var width = 1080
+    private var height = 720
     private var glfwWindow: Long = 0
     var backgroundColor: Color = Color.Companion.white
+    private lateinit var imguiLayer: ImGuiLayer
     fun run() {
         println("Hello LWJGL " + Version.getVersion() + "!")
         init()
@@ -67,6 +69,13 @@ class Window private constructor() {
         GLFW.glfwSetMouseButtonCallback(glfwWindow, MouseListener.Companion::mouseButtonCallback)
         GLFW.glfwSetScrollCallback(glfwWindow, MouseListener.Companion::mouseScrollCallback)
         GLFW.glfwSetKeyCallback(glfwWindow, KeyListener.Companion::keyCallBack)
+        GLFW.glfwSetWindowSizeCallback(glfwWindow, object : GLFWWindowSizeCallback() {
+            override fun invoke(window: Long, width: Int, height: Int) {
+                setWidth(width)
+                setHeight(height)
+            }
+
+        })
         check(glfwWindow != MemoryUtil.NULL) { "Failed to create glfw Window" }
 
         //Make OpenGL Context current
@@ -85,6 +94,8 @@ class Window private constructor() {
         GL.createCapabilities()
         GL11.glEnable(GL11.GL_BLEND)
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
+        this.imguiLayer = ImGuiLayer(glfwWindow)
+        imguiLayer.initImGui()
         changeScene(SceneType.LEVELEDITORSCENE)
     }
 
@@ -98,6 +109,7 @@ class Window private constructor() {
             GL11.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT)
             if (dt >= 0) scene.update(dt)
+            imguiLayer.update(dt)
             GLFW.glfwSwapBuffers(glfwWindow)
             endTime = GLFW.glfwGetTime().toFloat()
             dt = endTime - beginTime
@@ -117,6 +129,16 @@ class Window private constructor() {
             return instance!!
         }
 
+        @JvmStatic
+        fun getWidth(): Int {
+            return get().width
+        }
+
+        @JvmStatic
+        fun getHeight(): Int {
+            return get().height
+        }
+
         fun changeScene(newScene: SceneType) {
             when (newScene) {
                 SceneType.LEVELSCENE -> {
@@ -133,6 +155,16 @@ class Window private constructor() {
                     assert(false) { "Unkown Scene '$newScene'" }
                 }
             }
+        }
+
+        @JvmStatic
+        fun setWidth(width: Int) {
+            get().width = width
+        }
+
+        @JvmStatic
+        fun setHeight(height: Int) {
+            get().height = height
         }
     }
 }
