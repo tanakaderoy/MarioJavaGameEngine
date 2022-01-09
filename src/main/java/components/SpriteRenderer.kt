@@ -64,9 +64,9 @@ class SpriteRenderer : Component() {
 
 
     val texCoords: Array<Vector2f>?
-        get() = sprite?.texCoords
+        get() = sprite.texCoords
     val texture: Texture?
-        get() = sprite?.texture
+        get() = sprite.texture
 
 
     fun setSprite(sprite: Sprite) {

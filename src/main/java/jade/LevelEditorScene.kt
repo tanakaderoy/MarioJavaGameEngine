@@ -1,6 +1,5 @@
 package jade
 
-import com.google.gson.GsonBuilder
 import components.Sprite
 import components.SpriteRenderer
 import components.SpriteSheet
@@ -18,18 +17,21 @@ class LevelEditorScene : Scene() {
     override fun init() {
         loadResources()
         super.init()
-        sprites = AssetPool.getSpriteSheet(Constants.SPRITE_SHEET)
         camera = Camera(Vector2f(0f, 0f))
+        if (levelLoaded) {
+            return
+        }
+        sprites = AssetPool.getSpriteSheet(Constants.SPRITE_SHEET)
         //        obj1 = new GameObject("Obj 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
         obj1 = GameObject(
             "Obj 1", Transform(
-                Vector2f(200f, 100f),
+                Vector2f(100f, 100f),
                 Vector2f(256f, 256f)
             ),
             2
         )
         val obj1Sprite = SpriteRenderer()
-        obj1Sprite.color = Vector4f(1f, 0f, 0f, 1f)
+        obj1Sprite.color = Vector4f(0f, 1f, 0f, 1f)
         obj1!!.addComponent(obj1Sprite)
 //        obj1!!.addComponent(SpriteRenderer(Sprite("assets/images/blendImage1.png")))
         addGameObjectToScene(obj1!!)
@@ -49,14 +51,11 @@ class LevelEditorScene : Scene() {
         addGameObjectToScene(obj2!!)
         this.activeGameObject = obj1
 
-        val gson = GsonBuilder()
-            .setPrettyPrinting()
-            .create()
-
-        print(gson.toJson(obj1))
+        load()
 
 
     }
+
 
     private fun loadResources() {
         AssetPool.getShader(Constants.SHADERS_DEFAULT_GLSL)

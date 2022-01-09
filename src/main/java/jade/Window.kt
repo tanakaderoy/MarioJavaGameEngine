@@ -103,6 +103,7 @@ class Window private constructor() {
         var beginTime = GLFW.glfwGetTime().toFloat()
         var endTime: Float
         var dt = -1.0f
+        scene.load()
         while (!GLFW.glfwWindowShouldClose(glfwWindow)) {
             //Poll events
             GLFW.glfwPollEvents()
@@ -115,6 +116,7 @@ class Window private constructor() {
             dt = endTime - beginTime
             beginTime = endTime
         }
+        scene.saveExit()
     }
 
     companion object {
