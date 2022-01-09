@@ -3,7 +3,9 @@ package jade
 import components.Sprite
 import components.SpriteRenderer
 import components.SpriteSheet
+import imgui.ImGui
 import org.joml.Vector2f
+import org.joml.Vector4f
 import util.AssetPool
 import util.Constants
 import java.util.function.Consumer
@@ -25,7 +27,8 @@ class LevelEditorScene : Scene() {
             ),
             2
         )
-        obj1!!.addComponent(SpriteRenderer(Sprite("assets/images/blendImage1.png")))
+        obj1!!.addComponent(SpriteRenderer(Vector4f(1f, 0f, 0f, 1f)))
+//        obj1!!.addComponent(SpriteRenderer(Sprite("assets/images/blendImage1.png")))
         addGameObjectToScene(obj1!!)
         obj2 = GameObject(
             "Obj 2", Transform(
@@ -37,6 +40,8 @@ class LevelEditorScene : Scene() {
         obj2!!.addComponent(SpriteRenderer(Sprite("assets/images/blendImage2.png")))
         //        obj2.addComponent(new SpriteRenderer(sprites.getSprite(10)));
         addGameObjectToScene(obj2!!)
+        this.activeGameObject = obj1
+
     }
 
     private fun loadResources() {
@@ -51,6 +56,12 @@ class LevelEditorScene : Scene() {
                 0
             )
         )
+    }
+
+    override fun imgui() {
+        ImGui.begin("Test Window")
+        ImGui.text("Some random text")
+        ImGui.end()
     }
 
     override fun update(dt: Float) {

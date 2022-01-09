@@ -1,6 +1,7 @@
 package components
 
 
+import imgui.ImGui
 import jade.Component
 import jade.Transform
 import org.joml.Vector2f
@@ -16,13 +17,13 @@ class SpriteRenderer : Component {
             }
 
         }
-    private var sprite: Sprite
+    private var sprite: Sprite? = null
     private lateinit var lastTransform: Transform
     var isDirty = false
 
     constructor(color: Vector4f) {
         this.color = color
-        sprite = Sprite((null as Texture?)!!)
+//        sprite = Sprite((null as Texture?)!!)
         isDirty = true
     }
 
@@ -48,11 +49,20 @@ class SpriteRenderer : Component {
         }
     }
 
+    override fun imgui() {
+        val imColor = floatArrayOf(color.x, color.y, color.z, color.w)
+        if (ImGui.colorPicker4("Color Picker: ", imColor)) {
+            color.set(imColor[0], imColor[1], imColor[2], imColor[3])
+            isDirty = true
+        }
 
-    val texCoords: Array<Vector2f>
-        get() = sprite.texCoords
+    }
+
+
+    val texCoords: Array<Vector2f>?
+        get() = sprite?.texCoords
     val texture: Texture?
-        get() = sprite.texture
+        get() = sprite?.texture
 
 
     fun setSprite(sprite: Sprite) {

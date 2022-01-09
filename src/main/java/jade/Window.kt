@@ -12,8 +12,8 @@ import util.Color
 
 class Window private constructor() {
     private val title = "Mario"
-    private var width = 1080
-    private var height = 720
+    private var width = 1920
+    private var height = 1080
     private var glfwWindow: Long = 0
     var backgroundColor: Color = Color.Companion.white
     private lateinit var imguiLayer: ImGuiLayer
@@ -109,7 +109,7 @@ class Window private constructor() {
             GL11.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT)
             if (dt >= 0) scene.update(dt)
-            imguiLayer.update(dt)
+            imguiLayer.update(dt, scene)
             GLFW.glfwSwapBuffers(glfwWindow)
             endTime = GLFW.glfwGetTime().toFloat()
             dt = endTime - beginTime

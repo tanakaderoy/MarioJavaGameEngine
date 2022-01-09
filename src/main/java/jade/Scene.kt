@@ -1,10 +1,12 @@
 package jade
 
+import imgui.ImGui
 import renderer.Renderer
 import java.util.function.Consumer
 
 abstract class Scene {
     protected lateinit var camera: Camera
+    protected var activeGameObject: GameObject? = null
     private var isRunning = false
     protected var gameObjects: MutableList<GameObject> = ArrayList()
     protected var renderer: Renderer = Renderer()
@@ -34,4 +36,15 @@ abstract class Scene {
     fun camera(): Camera {
         return camera
     }
+
+    fun sceneImgui() {
+        activeGameObject?.let {
+            ImGui.begin("Inspector")
+            it.imgui()
+            ImGui.end()
+        }
+        imgui()
+    }
+
+    open fun imgui() {}
 }

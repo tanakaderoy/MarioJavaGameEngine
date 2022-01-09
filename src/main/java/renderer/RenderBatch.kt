@@ -205,8 +205,10 @@ class RenderBatch(maxBatchSize: Int, private val zIndex: Int) : IRenderBatch, Co
             vertices[offset + 5] = color.w
 
             // Load Texture Coords
-            vertices[offset + 6] = texCoords[i].x
-            vertices[offset + 7] = texCoords[i].y
+            texCoords?.get(i)?.let {
+                vertices[offset + 6] = it.x
+                vertices[offset + 7] = it.y
+            }
             // Load text id
             vertices[offset + 8] = texID.toFloat()
             offset += VERTEX_SIZE

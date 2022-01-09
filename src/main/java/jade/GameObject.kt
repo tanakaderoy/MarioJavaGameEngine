@@ -70,6 +70,10 @@ class GameObject {
         //    components.forEach(Component::start);
     }
 
+    fun imgui() {
+        components.forEach(Component::imgui)
+    }
+
     private fun runOnAllComponents(action: Consumer<Component>) {
         for (i in components.indices) {
             action.accept(components[i])
