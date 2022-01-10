@@ -1,5 +1,6 @@
 package jade
 
+import components.Component
 import java.util.function.Consumer
 
 class GameObject {

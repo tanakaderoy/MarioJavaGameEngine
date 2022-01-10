@@ -3,6 +3,7 @@ package jade
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import components.Component
 import java.lang.reflect.Type
 
 class GameObjectTypeAdapter : JsonDeserializer<GameObject> {

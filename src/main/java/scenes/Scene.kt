@@ -1,7 +1,12 @@
-package jade
+package scenes
 
 import com.google.gson.GsonBuilder
+import components.Component
+import components.ComponentTypeAdapter
 import imgui.ImGui
+import jade.Camera
+import jade.GameObject
+import jade.GameObjectTypeAdapter
 import renderer.Renderer
 import java.io.File
 import java.io.FileWriter

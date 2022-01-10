@@ -1,4 +1,4 @@
-package jade
+package scenes
 
 class LevelScene : Scene() {
     override fun init() {

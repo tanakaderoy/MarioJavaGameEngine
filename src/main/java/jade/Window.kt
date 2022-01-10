@@ -8,6 +8,9 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryUtil
+import scenes.LevelEditorScene
+import scenes.LevelScene
+import scenes.Scene
 import util.Color
 
 class Window private constructor() {

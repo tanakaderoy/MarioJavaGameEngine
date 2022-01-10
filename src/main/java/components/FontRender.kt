@@ -1,8 +1,5 @@
 package components
 
-import components.SpriteRenderer
-import jade.Component
-
 class FontRender : Component() {
     override fun start() {
         super.start()
