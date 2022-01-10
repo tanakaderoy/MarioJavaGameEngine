@@ -7,6 +7,15 @@ import org.joml.Vector4f
 import java.lang.reflect.Modifier
 
 abstract class Component {
+    companion object {
+        private var ID_COUNTER = 0
+        fun init(maxId: Int) {
+            ID_COUNTER = maxId
+        }
+    }
+
+    private var uid = -1
+
     @Transient
     lateinit var gameObject: GameObject
     open fun start() {}
@@ -64,4 +73,16 @@ abstract class Component {
             e.printStackTrace()
         }
     }
+
+    fun gereateID() {
+        if (uid == -1) {
+            uid = ID_COUNTER++
+        }
+    }
+
+    fun getUid(): Int {
+        return uid
+    }
+
+
 }

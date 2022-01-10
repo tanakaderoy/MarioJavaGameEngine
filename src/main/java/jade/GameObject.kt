@@ -8,10 +8,15 @@ class GameObject {
     private lateinit var components: MutableList<Component>
     lateinit var transform: Transform
     private var zIndex = 0
+    private var uid = -1
 
-    constructor(name: String) {
-        init(name)
+    companion object {
+        private var ID_COUNTER = 0
+        fun init(maxID: Int) {
+            ID_COUNTER = maxID
+        }
     }
+
 
     fun init(name: String) {
         this.name = name
@@ -24,6 +29,7 @@ class GameObject {
         this.init(name)
         this.transform = transform
         this.zIndex = zIndex
+        this.uid = ID_COUNTER++
     }
 
     constructor(name: String, transform: Transform, zIndex: Int) {
@@ -55,6 +61,7 @@ class GameObject {
     }
 
     fun addComponent(component: Component) {
+        component.gereateID()
         components.add(component)
         component.gameObject = this
     }
@@ -83,5 +90,13 @@ class GameObject {
 
     fun getzIndex(): Int {
         return zIndex
+    }
+
+    fun getUid(): Int {
+        return uid
+    }
+
+    fun getAllComponents(): MutableList<Component> {
+        return components
     }
 }

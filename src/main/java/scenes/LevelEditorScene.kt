@@ -1,15 +1,9 @@
 package scenes
 
-import components.RigidBody
-import components.Sprite
-import components.SpriteRenderer
-import components.SpriteSheet
+import components.*
 import imgui.ImGui
 import imgui.ImVec2
-import jade.Camera
-import jade.GameObject
-import jade.MouseListener
-import jade.Transform
+import jade.*
 import org.joml.Vector2f
 import org.joml.Vector4f
 import util.AssetPool
@@ -19,9 +13,9 @@ class LevelEditorScene : Scene() {
     private var obj1: GameObject? = null
     private var obj2: GameObject? = null
     private var sprites: SpriteSheet? = null
+    private val mouseControls = MouseControls()
     override fun init() {
         loadResources()
-        super.init()
         camera = Camera(Vector2f(-250f, 0f))
         sprites = AssetPool.getSpriteSheet(Constants.DECORATIONS_AND_BLOCKS)
         if (levelLoaded) {
@@ -31,10 +25,8 @@ class LevelEditorScene : Scene() {
         //        obj1 = new GameObject("Obj 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
         obj1 = GameObject(
             "Obj 1", Transform(
-                Vector2f(200f, 100f),
-                Vector2f(256f, 256f)
-            ),
-            2
+                Vector2f(200f, 100f), Vector2f(256f, 256f)
+            ), 2
         )
         val obj1Sprite = SpriteRenderer()
         obj1Sprite.color = Vector4f(0f, 1f, 0f, 1f)
@@ -44,10 +36,8 @@ class LevelEditorScene : Scene() {
         addGameObjectToScene(obj1!!)
         obj2 = GameObject(
             "Obj 2", Transform(
-                Vector2f(400f, 100f),
-                Vector2f(256f, 256f)
-            ),
-            3
+                Vector2f(400f, 100f), Vector2f(256f, 256f)
+            ), 3
         )
         val obj2SpriteRenderer = SpriteRenderer()
         val obj2Sprite = Sprite()
@@ -67,13 +57,8 @@ class LevelEditorScene : Scene() {
     private fun loadResources() {
         AssetPool.getShader(Constants.SHADERS_DEFAULT_GLSL)
         AssetPool.addSpriteSheet(
-            Constants.DECORATIONS_AND_BLOCKS,
-            SpriteSheet(
-                AssetPool.getTexture(Constants.DECORATIONS_AND_BLOCKS),
-                16,
-                16,
-                81,
-                0
+            Constants.DECORATIONS_AND_BLOCKS, SpriteSheet(
+                AssetPool.getTexture(Constants.DECORATIONS_AND_BLOCKS), 16, 16, 81, 0
             )
         )
         AssetPool.getTexture("assets/images/blendImage2.png")
@@ -98,16 +83,12 @@ class LevelEditorScene : Scene() {
                 val texCoords = sprite.texCoords
                 ImGui.pushID(i)
                 if (ImGui.imageButton(
-                        id,
-                        spriteWidth,
-                        spriteHeight,
-                        texCoords[0].x,
-                        texCoords[0].y,
-                        texCoords[2].x,
-                        texCoords[2].y
+                        id, spriteWidth, spriteHeight, texCoords[0].x, texCoords[0].y, texCoords[2].x, texCoords[2].y
                     )
                 ) {
-                    println("Button $i clicked")
+                    val `object` = Prefabs.generateSpriteObject(sprite, spriteWidth, spriteHeight)
+                    // Attach this to the mouse cursor
+                    mouseControls.pickupObject(`object`)
                 }
                 ImGui.popID()
 
@@ -126,6 +107,7 @@ class LevelEditorScene : Scene() {
     }
 
     override fun update(dt: Float) {
+        mouseControls.update(dt)
         MouseListener.getOrthoX()
         gameObjects.forEach { gameObject -> gameObject.update(dt) }
         renderer.render()

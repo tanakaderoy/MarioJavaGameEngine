@@ -10,7 +10,7 @@ class MouseListener private constructor() {
     private var yPos = 0.0
     private var lastY = 0.0
     private var lastX = 0.0
-    private val mouseButtonPressed = BooleanArray(3)
+    private val mouseButtonPressed = BooleanArray(9)
     private var isDragging = false
 
     companion object {
@@ -86,7 +86,7 @@ class MouseListener private constructor() {
         }
 
         fun getOrthoY(): Float {
-            var currentY = y
+            var currentY = Window.getHeight() - y
             currentY = (currentY / (Window.getHeight())) * 2f - 1f
             var tmp = Vector4f(0f, currentY, 0f, 1f)
             tmp.mul(Window.scene.camera().getInverseProjection()).mul(Window.scene.camera().getInverseView())

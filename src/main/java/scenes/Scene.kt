@@ -14,6 +14,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.function.Consumer
+import kotlin.math.max
 
 abstract class Scene {
     protected var levelLoaded = false
@@ -78,6 +79,8 @@ abstract class Scene {
     fun load() {
 
         var inFile = ""
+        var maxGoID = -1
+        var maxCompID = -1
         try {
             val file = File(Paths.get("level.json").toUri())
             if (!file.exists()) {
@@ -90,8 +93,21 @@ abstract class Scene {
 
         if (inFile.isNotEmpty()) {
             val objs = gson.fromJson(inFile, Array<GameObject>::class.java).toList()
-            objs.forEach { addGameObjectToScene(it) }
-            this.levelLoaded = true
+            objs.forEach {
+                addGameObjectToScene(it)
+                it.getAllComponents().forEach { c ->
+//                    maxCompID = if (c.getUid() > maxCompID) c.getUid() else maxCompID
+                    maxCompID = max(c.getUid(), maxCompID)
+                }
+//                maxGoID = if (it.getUid() > maxGoID) it.getUid() else maxGoID
+                maxGoID = max(it.getUid(), maxGoID)
+            }
+
         }
+        maxGoID++
+        maxCompID++
+        GameObject.init(maxGoID)
+        Component.init(maxCompID)
+        this.levelLoaded = true
     }
 }
