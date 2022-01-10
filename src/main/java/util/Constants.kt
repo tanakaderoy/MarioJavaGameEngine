@@ -1,6 +1,7 @@
 package util
 
 object Constants {
+    const val DEBUG_LINE_2D = "assets/shaders/debugLine2D.glsl"
     const val SHADERS_DEFAULT_GLSL = "assets/shaders/default.glsl"
     const val SPRITE_SHEET = "assets/images/spritesheet.png"
     const val DECORATIONS_AND_BLOCKS = "assets/images/spritesheets/decorationsAndBlocks.png"

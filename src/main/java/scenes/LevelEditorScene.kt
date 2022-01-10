@@ -4,10 +4,14 @@ import components.*
 import imgui.ImGui
 import imgui.ImVec2
 import jade.*
+import org.joml.Math.cos
 import org.joml.Vector2f
 import org.joml.Vector4f
+import renderer.DebugDraw
 import util.AssetPool
+import util.Color
 import util.Constants
+import kotlin.math.sin
 
 class LevelEditorScene : Scene() {
     private var obj1: GameObject? = null
@@ -18,6 +22,7 @@ class LevelEditorScene : Scene() {
         loadResources()
         camera = Camera(Vector2f(-250f, 0f))
         sprites = AssetPool.getSpriteSheet(Constants.DECORATIONS_AND_BLOCKS)
+        DebugDraw.addLine2D(Vector2f(0f, 0f), Vector2f(800f, 800f), Color.red.toVec3f(), 120)
         if (levelLoaded) {
             this.activeGameObject = gameObjects[0]
             return
@@ -49,7 +54,6 @@ class LevelEditorScene : Scene() {
         this.activeGameObject = obj1
 
         load()
-
 
     }
 
@@ -106,8 +110,13 @@ class LevelEditorScene : Scene() {
         ImGui.end()
     }
 
+    var t = 0f
     override fun update(dt: Float) {
         mouseControls.update(dt)
+        var x = ((sin(t) * 200f) + 600f).toFloat()
+        var y: Float = (cos(t) * 200f) + 400
+        t += 0.05f
+        DebugDraw.addLine2D(Vector2f(600f, 400f), Vector2f(x, y), Color.blue.toVec3f(), 10)
         MouseListener.getOrthoX()
         gameObjects.forEach { gameObject -> gameObject.update(dt) }
         renderer.render()

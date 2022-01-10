@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFWWindowSizeCallback
 import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryUtil
+import renderer.DebugDraw
 import scenes.LevelEditorScene
 import scenes.LevelScene
 import scenes.Scene
@@ -109,9 +110,14 @@ class Window private constructor() {
         while (!GLFW.glfwWindowShouldClose(glfwWindow)) {
             //Poll events
             GLFW.glfwPollEvents()
+
+            DebugDraw.beginFrame()
             GL11.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT)
-            if (dt >= 0) scene.update(dt)
+            if (dt >= 0) {
+                DebugDraw.draw()
+                scene.update(dt)
+            }
             imguiLayer.update(dt, scene)
             GLFW.glfwSwapBuffers(glfwWindow)
             endTime = GLFW.glfwGetTime().toFloat()

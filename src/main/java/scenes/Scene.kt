@@ -90,9 +90,9 @@ abstract class Scene {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
+        var objs: List<GameObject> = ArrayList()
         if (inFile.isNotEmpty()) {
-            val objs = gson.fromJson(inFile, Array<GameObject>::class.java).toList()
+            objs = gson.fromJson(inFile, Array<GameObject>::class.java).toList()
             objs.forEach {
                 addGameObjectToScene(it)
                 it.getAllComponents().forEach { c ->
@@ -108,6 +108,6 @@ abstract class Scene {
         maxCompID++
         GameObject.init(maxGoID)
         Component.init(maxCompID)
-        this.levelLoaded = true
+        this.levelLoaded = objs.isNotEmpty()
     }
 }
