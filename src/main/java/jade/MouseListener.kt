@@ -1,5 +1,6 @@
 package jade
 
+import org.joml.Vector4f
 import org.lwjgl.glfw.GLFW
 
 class MouseListener private constructor() {
@@ -73,6 +74,24 @@ class MouseListener private constructor() {
 
         fun isDragging(): Boolean {
             return get()!!.isDragging
+        }
+
+        fun getOrthoX(): Float {
+            var currentX = x
+            currentX = (currentX / (Window.getWidth())) * 2f - 1f
+            var tmp = Vector4f(currentX, 0f, 0f, 1f)
+            tmp.mul(Window.scene.camera().getInverseProjection()).mul(Window.scene.camera().getInverseView())
+            currentX = tmp.x
+            return currentX
+        }
+
+        fun getOrthoY(): Float {
+            var currentY = y
+            currentY = (currentY / (Window.getHeight())) * 2f - 1f
+            var tmp = Vector4f(0f, currentY, 0f, 1f)
+            tmp.mul(Window.scene.camera().getInverseProjection()).mul(Window.scene.camera().getInverseView())
+            currentY = tmp.y
+            return currentY
         }
 
         fun mouseButtonDown(button: Int): Boolean {

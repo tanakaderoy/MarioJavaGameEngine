@@ -24,6 +24,8 @@ class SpriteSheet(private val texture: Texture, spriteWidth: Int, spriteHeight: 
             val sprite = Sprite()
             sprite.setTexture(texture)
             sprite.setTexCoords(texCoords)
+            sprite.setHeight(spriteHeight.toFloat())
+            sprite.setWidth(spriteHeight.toFloat())
             sprites.add(sprite)
             currentX += spriteWidth + spacing
             if (currentX >= texture.width) {
@@ -35,5 +37,9 @@ class SpriteSheet(private val texture: Texture, spriteWidth: Int, spriteHeight: 
 
     fun getSprite(index: Int): Sprite {
         return sprites[index]
+    }
+
+    fun size(): Int {
+        return sprites.size
     }
 }

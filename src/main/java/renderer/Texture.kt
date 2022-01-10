@@ -60,4 +60,8 @@ class Texture {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
     }
 
+    fun getID(): Int {
+        return texID
+    }
+
 }

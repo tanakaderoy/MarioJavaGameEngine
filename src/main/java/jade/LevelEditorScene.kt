@@ -5,11 +5,11 @@ import components.Sprite
 import components.SpriteRenderer
 import components.SpriteSheet
 import imgui.ImGui
+import imgui.ImVec2
 import org.joml.Vector2f
 import org.joml.Vector4f
 import util.AssetPool
 import util.Constants
-import java.util.function.Consumer
 
 class LevelEditorScene : Scene() {
     private var obj1: GameObject? = null
@@ -18,12 +18,12 @@ class LevelEditorScene : Scene() {
     override fun init() {
         loadResources()
         super.init()
-        camera = Camera(Vector2f(0f, 0f))
+        camera = Camera(Vector2f(-250f, 0f))
+        sprites = AssetPool.getSpriteSheet(Constants.DECORATIONS_AND_BLOCKS)
         if (levelLoaded) {
             this.activeGameObject = gameObjects[0]
             return
         }
-        sprites = AssetPool.getSpriteSheet(Constants.SPRITE_SHEET)
         //        obj1 = new GameObject("Obj 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
         obj1 = GameObject(
             "Obj 1", Transform(
@@ -63,12 +63,12 @@ class LevelEditorScene : Scene() {
     private fun loadResources() {
         AssetPool.getShader(Constants.SHADERS_DEFAULT_GLSL)
         AssetPool.addSpriteSheet(
-            Constants.SPRITE_SHEET,
+            Constants.DECORATIONS_AND_BLOCKS,
             SpriteSheet(
-                AssetPool.getTexture(Constants.SPRITE_SHEET),
+                AssetPool.getTexture(Constants.DECORATIONS_AND_BLOCKS),
                 16,
                 16,
-                26,
+                81,
                 0
             )
         )
@@ -77,12 +77,53 @@ class LevelEditorScene : Scene() {
 
     override fun imgui() {
         ImGui.begin("Test Window")
-        ImGui.text("Some random text")
+        val windowPos = ImVec2()
+        ImGui.getWindowPos(windowPos)
+        val windowSize = ImVec2()
+        ImGui.getWindowSize(windowSize)
+        val itemSpacing = ImVec2()
+        ImGui.getStyle().getItemSpacing(itemSpacing)
+
+        val windowX2 = windowPos.x + windowSize.x
+        sprites?.let { sprites ->
+            for (i in 0 until sprites.size()) {
+                val sprite = sprites.getSprite(i)
+                val spriteWidth = sprite.getWidth() * 4f
+                val spriteHeight = sprite.getHeight() * 4f
+                val id = sprite.getTexID()
+                val texCoords = sprite.texCoords
+                ImGui.pushID(i)
+                if (ImGui.imageButton(
+                        id,
+                        spriteWidth,
+                        spriteHeight,
+                        texCoords[0].x,
+                        texCoords[0].y,
+                        texCoords[2].x,
+                        texCoords[2].y
+                    )
+                ) {
+                    println("Button $i clicked")
+                }
+                ImGui.popID()
+
+                val lastButtonPos = ImVec2()
+
+                ImGui.getItemRectMax(lastButtonPos)
+                val lastButtonX2 = lastButtonPos.x
+                val nextButtonX2 = lastButtonX2 + itemSpacing.x + spriteWidth
+                if (i + 1 < sprites.size() && nextButtonX2 < windowX2) {
+                    ImGui.sameLine()
+                }
+            }
+
+        }
         ImGui.end()
     }
 
     override fun update(dt: Float) {
-        gameObjects.forEach(Consumer { gameObject: GameObject -> gameObject.update(dt) })
+        MouseListener.getOrthoX()
+        gameObjects.forEach { gameObject -> gameObject.update(dt) }
         renderer.render()
     }
 }

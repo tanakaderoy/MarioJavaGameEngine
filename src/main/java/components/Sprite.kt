@@ -4,6 +4,8 @@ import org.joml.Vector2f
 import renderer.Texture
 
 class Sprite {
+    private var width = 0f
+    private var height = 0f
     var texture: Texture? = null
         private set
     var texCoords: Array<Vector2f> = arrayOf(
@@ -21,33 +23,25 @@ class Sprite {
     fun setTexture(texture: Texture) {
         this.texture = texture
     }
-//    constructor(texture: Texture) {
-//        init(texture)
-//        this.texCoords = arrayOf(
-//            Vector2f(1f, 1f),
-//            Vector2f(1f, 0f),
-//            Vector2f(0f, 0f),
-//            Vector2f(0f, 1f)
-//        )
-//    }
-//    constructor(assetPoolKey: String) {
-//        init(AssetPool.getTexture(assetPoolKey))
-//        this.texCoords = arrayOf(
-//            Vector2f(1f, 1f),
-//            Vector2f(1f, 0f),
-//            Vector2f(0f, 0f),
-//            Vector2f(0f, 1f)
-//        )
-//    }
 
-//    private fun init(texture: Texture) {
-//        this.texture = texture
-//
-//    }
+    fun getWidth(): Float {
+        return width
+    }
 
+    fun getHeight(): Float {
+        return height
+    }
 
-//    constructor(texture: Texture?, texCoords: Array<Vector2f>) {
-//        this.texture = texture
-//        this.texCoords = texCoords
-//    }
+    fun getTexID(): Int {
+        return texture?.getID() ?: -1
+    }
+
+    fun setWidth(width: Float) {
+        this.width = width
+    }
+
+    fun setHeight(height: Float) {
+        this.height = height
+    }
+
 }
