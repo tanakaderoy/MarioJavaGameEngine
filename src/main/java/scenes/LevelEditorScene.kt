@@ -7,7 +7,9 @@ import imgui.ImGui
 import imgui.ImVec2
 import jade.*
 import org.joml.Vector2f
+import renderer.DebugDraw
 import util.AssetPool
+import util.Color
 import util.Constants
 
 class LevelEditorScene : Scene() {
@@ -108,10 +110,19 @@ class LevelEditorScene : Scene() {
         ImGui.end()
     }
 
+    var x = 0f
+    var y = 0f
     override fun update(dt: Float) {
+        DebugDraw.addCircle(Vector2f(x, y), 64f)
+        DebugDraw.addBox2D(Vector2f(200, 200), Vector2f(64, 32), 20f, Color.green.toVec3f(), 1)
+        x += 50f * dt
+        y += 50f * dt
         levelEditorStuff.update(dt)
         MouseListener.getOrthoX()
         gameObjects.forEach { gameObject -> gameObject.update(dt) }
         renderer.render()
     }
+
+    fun Vector2f(x: Int, y: Int): Vector2f = Vector2f(x.toFloat(), y.toFloat())
 }
+

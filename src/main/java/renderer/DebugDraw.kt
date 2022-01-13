@@ -9,6 +9,7 @@ import org.lwjgl.opengl.GL30.*
 import util.AssetPool
 import util.Color
 import util.Constants
+import util.JMath
 
 object DebugDraw {
 
@@ -127,5 +128,66 @@ object DebugDraw {
         lines.add(Line2D(from, to, color, lifetime))
     }
 
+    // ======================================================
+    // Add Box2d Methods
+    // ======================================================
+
+//    fun addBox2D(center: Vector2f, dimensions: Vector2f, rotation: Float = 0.0f) {
+//        addBox2D(center = center, dimensions = dimensions, rotation = rotation)
+//    }
+//
+//    fun addBox2D(center: Vector2f, dimensions: Vector2f, rotation: Float = 0.0f, color: Vector3f) {
+//        addBox2D(center = center, dimensions = dimensions, rotation = rotation, color = color)
+//    }
+
+    fun addBox2D(
+        center: Vector2f,
+        dimensions: Vector2f,
+        rotation: Float = 0.0f,
+        color: Vector3f = Color.green.toVec3f(),
+        lifetime: Int = 1
+    ) {
+        var min = Vector2f(center).sub(Vector2f(dimensions).mul(0.5f))
+        var max = Vector2f(center).add(Vector2f(dimensions).mul(0.5f))
+
+        var vertices = arrayOf(
+            Vector2f(min.x, min.y),
+            Vector2f(min.x, max.y),
+            Vector2f(max.x, max.y),
+            Vector2f(max.x, min.y),
+        )
+
+        if (rotation != 0.0f) {
+            for (vert in vertices) {
+                JMath.rotate(vert, rotation, center)
+            }
+        }
+        addLine2D(vertices[0], vertices[1], color, lifetime)
+        addLine2D(vertices[0], vertices[3], color, lifetime)
+        addLine2D(vertices[1], vertices[2], color, lifetime)
+        addLine2D(vertices[2], vertices[3], color, lifetime)
+
+
+    }
+
+    // ======================================================
+    // Add Circle Methods
+    // ======================================================
+
+    fun addCircle(center: Vector2f, radius: Float, color: Vector3f = Color.green.toVec3f(), lifetime: Int = 1) {
+        var points = MutableList(20) { Vector2f() }
+        val increment = 360 / points.size
+        var currentAngle = 0f
+        for (i in 0 until points.size) {
+            val tmp = Vector2f(radius, 0f)
+            JMath.rotate(tmp, currentAngle, Vector2f())
+            points[i] = Vector2f(tmp).add(center)
+            if (i > 0) {
+                addLine2D(points[i - 1], points[i], color, lifetime)
+            }
+            currentAngle += increment
+        }
+        addLine2D(points.last(), points.first())
+    }
 
 }
