@@ -15,8 +15,11 @@ object IntersectionDetector2D {
     fun pointOnLine(point: Vector2f, line: Line2D): Boolean {
         val dy = line.getEnd().y - line.getStart().y
         val dx = line.getEnd().x - line.getStart().x
+        if (dx == 0f) {
+            return JMath.compare(point.x, line.getStart().x)
+        }
         val m = dy / dx
-
+        println(m)
         val b = line.getEnd().y - (m * line.getEnd().x)
         // y = mx + b
         return point.y == m * point.x + b
@@ -49,8 +52,29 @@ object IntersectionDetector2D {
                 pointLocalBoxSpace.y <= max.y && min.y <= pointLocalBoxSpace.y
     }
 
-
     // ========================================
     // Line vs. Primitive Tests
     // ========================================
+
+    fun lineAndCircle(line: Line2D, circle: Circle): Boolean {
+        if (pointInCirlce(line.getStart(), circle) || pointInCirlce(line.getEnd(), circle)) {
+            return true
+        }
+
+        val ab = Vector2f(line.getEnd()).sub(line.getStart())
+
+        // Project point cir5cle pos onto ab line seg
+        // parametized pos t
+        val circleCenter = circle.getCenter()
+        val centerToLineStart = Vector2f(circleCenter).sub(line.getStart())
+        val t = centerToLineStart.dot(ab) / ab.dot(ab)
+
+        if (t < 0.0f || t > 1.0f) {
+            return false
+        }
+
+        // Find the closest point to the line segment
+        val closestPoint = Vector2f(line.getStart()).add(ab.mul(t))
+        return pointInCirlce(closestPoint, circle)
+    }
 }
