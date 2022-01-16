@@ -167,7 +167,7 @@ class RenderBatch(maxBatchSize: Int, private val zIndex: Int) : IRenderBatch, Co
         var texID = 0
         if (sprite.texture != null) {
             for (i in textures.indices) {
-                if (textures[i] === sprite.texture) {
+                if (textures[i] == sprite.texture) {
                     texID = i + 1
                     break
                 }

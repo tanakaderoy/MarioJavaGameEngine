@@ -9,10 +9,12 @@ import org.lwjgl.opengl.GL
 import org.lwjgl.opengl.GL11
 import org.lwjgl.system.MemoryUtil
 import renderer.DebugDraw
+import renderer.Framebuffer
 import scenes.LevelEditorScene
 import scenes.LevelScene
 import scenes.Scene
 import util.Color
+import java.awt.GraphicsEnvironment
 
 class Window private constructor() {
     private val title = "Mario"
@@ -21,6 +23,7 @@ class Window private constructor() {
     private var glfwWindow: Long = 0
     var backgroundColor: Color = Color.Companion.white
     private lateinit var imguiLayer: ImGuiLayer
+    private lateinit var framebuffer: Framebuffer
     fun run() {
         println("Hello LWJGL " + Version.getVersion() + "!")
         init()
@@ -100,6 +103,9 @@ class Window private constructor() {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA)
         this.imguiLayer = ImGuiLayer(glfwWindow)
         imguiLayer.initImGui()
+        val devWidth = GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice.displayMode.width
+        val devHeight = GraphicsEnvironment.getLocalGraphicsEnvironment().defaultScreenDevice.displayMode.height
+        this.framebuffer = Framebuffer(devWidth, devHeight)
         changeScene(SceneType.LEVELEDITORSCENE)
     }
 
@@ -114,10 +120,12 @@ class Window private constructor() {
             DebugDraw.beginFrame()
             GL11.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT)
+            framebuffer.bind()
             if (dt >= 0) {
                 DebugDraw.draw()
                 scene.update(dt)
             }
+            framebuffer.unBind()
             imguiLayer.update(dt, scene)
             GLFW.glfwSwapBuffers(glfwWindow)
             endTime = GLFW.glfwGetTime().toFloat()

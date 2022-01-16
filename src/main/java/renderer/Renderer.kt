@@ -2,7 +2,6 @@ package renderer
 
 import components.SpriteRenderer
 import jade.GameObject
-import java.util.*
 import java.util.function.Consumer
 
 class Renderer : RendererI {
@@ -35,7 +34,7 @@ class Renderer : RendererI {
             newBatch.start()
             batches.add(newBatch)
             newBatch.addSprite(sprite)
-            Collections.sort(batches)
+            batches.sort()
         }
     }
 
