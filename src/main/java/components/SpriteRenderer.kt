@@ -73,4 +73,8 @@ class SpriteRenderer : Component() {
         isDirty = true
     }
 
+    fun setTexture(texture: Texture) {
+        sprite.setTexture(texture)
+    }
+
 }

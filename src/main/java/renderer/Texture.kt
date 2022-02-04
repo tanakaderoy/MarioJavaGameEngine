@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11.*
 import org.lwjgl.stb.STBImage
 
 class Texture {
+    @Transient
     private var texID: Int = 0;
     private lateinit var filepath: String
     var width: Int = 0

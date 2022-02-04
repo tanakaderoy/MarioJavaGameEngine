@@ -3,19 +3,18 @@ package jade
 import imgui.ImFontConfig
 import imgui.ImGui
 import imgui.ImGuiFreeType
-import imgui.callbacks.ImStrConsumer
-import imgui.callbacks.ImStrSupplier
-import imgui.enums.ImGuiBackendFlags
-import imgui.enums.ImGuiConfigFlags
-import imgui.enums.ImGuiKey
-import imgui.enums.ImGuiMouseCursor
+import imgui.callback.ImStrConsumer
+import imgui.callback.ImStrSupplier
+import imgui.flag.*
 import imgui.gl3.ImGuiImplGl3
+import imgui.type.ImBoolean
 import jade.KeyListener.Companion.keyCallBack
 import jade.MouseListener.Companion.mouseButtonCallback
 import jade.Window.Companion.getHeight
 import jade.Window.Companion.getWidth
 import org.lwjgl.glfw.GLFW
 import scenes.Scene
+
 
 class ImGuiLayer(private val glfwWindow: Long) {
     // Mouse cursors provided by GLFW
@@ -35,6 +34,7 @@ class ImGuiLayer(private val glfwWindow: Long) {
         val io = ImGui.getIO()
         io.iniFilename = "imgui.ini" // We don't want to save .ini file
         io.configFlags = ImGuiConfigFlags.NavEnableKeyboard // Navigation with keyboard
+        io.configFlags = ImGuiConfigFlags.DockingEnable //  Enable Docking
         io.backendFlags = ImGuiBackendFlags.HasMouseCursors // Mouse cursors to display while resizing windows etc.
         io.backendPlatformName = "imgui_java_impl_glfw"
 
@@ -156,11 +156,12 @@ class ImGuiLayer(private val glfwWindow: Long) {
 
     fun update(dt: Float, currentScene: Scene) {
         startFrame(dt)
-
         // Any Dear ImGui code SHOULD go between ImGui.newFrame()/ImGui.render() methods
         ImGui.newFrame()
+        setupDockspace()
         currentScene.sceneImgui()
         ImGui.showDemoWindow()
+        ImGui.end()
         ImGui.render()
         endFrame()
     }
@@ -196,5 +197,21 @@ class ImGuiLayer(private val glfwWindow: Long) {
     private fun destroyImGui() {
         imGuiGl3.dispose()
         ImGui.destroyContext()
+    }
+
+    private fun setupDockspace() {
+        var windowFlags = ImGuiWindowFlags.MenuBar or ImGuiWindowFlags.NoDocking
+        ImGui.setNextWindowPos(0.0f, 0.0f, ImGuiCond.Always)
+        ImGui.setNextWindowSize(getWidth().toFloat(), getHeight().toFloat())
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowRounding, 0.0f)
+        ImGui.pushStyleVar(ImGuiStyleVar.WindowBorderSize, 0.0f)
+        windowFlags = windowFlags or (ImGuiWindowFlags.NoTitleBar or ImGuiWindowFlags.NoCollapse or
+                ImGuiWindowFlags.NoResize or ImGuiWindowFlags.NoMove or
+                ImGuiWindowFlags.NoBringToFrontOnFocus or ImGuiWindowFlags.NoNavFocus)
+        ImGui.begin("Dockspace Demo", ImBoolean(true), windowFlags)
+        ImGui.popStyleVar(2)
+
+        // Dockspace
+        ImGui.dockSpace(ImGui.getID("Dockspace"))
     }
 }

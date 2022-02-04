@@ -18,8 +18,8 @@ import java.awt.GraphicsEnvironment
 
 class Window private constructor() {
     private val title = "Mario"
-    private var width = 1920
-    private var height = 1080
+    private var width = 1920//GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices[0].displayMode.width
+    private var height = 1080//GraphicsEnvironment.getLocalGraphicsEnvironment().screenDevices[0].displayMode.height
     private var glfwWindow: Long = 0
     var backgroundColor: Color = Color.Companion.white
     private lateinit var imguiLayer: ImGuiLayer
@@ -120,7 +120,7 @@ class Window private constructor() {
             DebugDraw.beginFrame()
             GL11.glClearColor(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT)
-            framebuffer.bind()
+//            framebuffer.bind()
             if (dt >= 0) {
                 DebugDraw.draw()
                 scene.update(dt)

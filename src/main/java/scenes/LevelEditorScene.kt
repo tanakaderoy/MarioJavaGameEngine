@@ -2,6 +2,7 @@ package scenes
 
 import components.GridLines
 import components.MouseControls
+import components.SpriteRenderer
 import components.SpriteSheet
 import imgui.ImGui
 import imgui.ImVec2
@@ -24,7 +25,9 @@ class LevelEditorScene : Scene() {
         camera = Camera(Vector2f(-250f, 0f))
         sprites = AssetPool.getSpriteSheet(Constants.DECORATIONS_AND_BLOCKS)
         if (levelLoaded) {
-            this.activeGameObject = gameObjects[0]
+            if (gameObjects.size > 0) {
+                this.activeGameObject = gameObjects[0]
+            }
             return
         }
         //        obj1 = new GameObject("Obj 1", new Transform(new Vector2f(100, 100), new Vector2f(256, 256)));
@@ -66,6 +69,12 @@ class LevelEditorScene : Scene() {
             )
         )
         AssetPool.getTexture("assets/images/blendImage2.png")
+
+        for (g in gameObjects) {
+
+            val spr = g.getComponent(SpriteRenderer::class.java)
+            spr?.setTexture(AssetPool.getTexture(spr.texture?.getFilePath() ?: ""))
+        }
     }
 
     override fun imgui() {
